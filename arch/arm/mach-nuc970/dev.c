@@ -327,6 +327,36 @@ static struct nuc970fb_display nuc970fb_lcd_info[] = {
 	},
 #endif
 
+
+#ifdef CONFIG_HannStar_HSD043I9W1_480X272
+	/* AUO HSD043I9W1 480x272 TFT Panel , 16bits*/
+	[0] = {
+		.type		= LCM_DCCS_VA_SRC_RGB565,
+		.width		= 480,
+		.height		= 272,
+		.xres		= 480,
+		.yres		= 272,
+		.bpp		= 16,
+		.pixclock	= 20000000,
+		.left_margin	= 125,
+		.right_margin   = 115,
+		.hsync_len	= 64,
+		.upper_margin	= 70,
+		.lower_margin	= 36,
+		.vsync_len	= 6,
+		.dccs		= 0x0e00040a,
+		//.devctl		= 0x060800c0,
+		.fbctrl		= 0x00F000F0,
+		.scale		= 0x04000400,
+		#ifdef CONFIG_FB_LCD_16BIT_PIN
+        .devctl		= 0x050000c0,
+		#elif defined(CONFIG_FB_LCD_24BIT_PIN)
+	    .devctl		= 0x070000c0,
+		#endif
+	},
+#endif
+
+
 #ifdef CONFIG_FW070TFT_800X480
 	/* FW070TFT 800x480 TFT Panel , 24bits*/
 	[0] = {

@@ -322,6 +322,9 @@ static int nuc970_rtc_probe(struct platform_device *pdev)
 
 	platform_set_drvdata(pdev, nuc970_rtc);
 
+        #ifdef CONFIG_ENABLE_RTC_WAKEUP
+	device_init_wakeup(&pdev->dev, 1);
+	#endif
 	nuc970_rtc->rtcdev = devm_rtc_device_register(&pdev->dev, pdev->name,
 						&nuc970_rtc_ops, THIS_MODULE);
 	if (IS_ERR(nuc970_rtc->rtcdev)) {

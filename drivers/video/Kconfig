@@ -2127,6 +2127,11 @@ choice
         depends on FB_NUC970
         select FB_NUC970_18BIT_PIN
 
+	config HannStar_HSD043I9W1_480X272
+        bool "HSD043I9W1 480X272 RGB565 LCD"
+        depends on FB_NUC970
+        select FB_NUC970_24BIT_PIN
+
 	config E50A2V1_800X480
         bool "E50A2V1 800x480 5-Inch Color TFT LCD"
         depends on FB_NUC970
