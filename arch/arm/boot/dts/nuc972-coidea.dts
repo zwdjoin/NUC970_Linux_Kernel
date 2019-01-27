@@ -1,0 +1,360 @@
+/*
+ * nuc972-evb.dts - Device Tree file for Nuvoton NUC972 EVB board
+ *
+ * Copyright (C) 2015 Tanshi Li <chuncky@sohu.com>
+ *
+ * Licensed under GPLv2.
+ */
+/dts-v1/;
+/include/ "nuc970.dtsi"
+/* /include/ "nuc972.dtsi" */
+
+/ {
+	model = "Nuvoton NUC972 Coidea";
+	compatible = "nuvoton,nuc972-coidea", "nuvoton,nuc972-evb", "nuvoton,nuc972", "nuvoton,nuc970";
+
+	chosen {
+		bootargs = "noinitrd console=ttyS0,115200 ubi.mtd=2 root=ubi0:rootfs rootfstype=ubifs mtdparts=nand0:0x200000@0x0(u-boot),0x1E00000@0x200000(kernel),-(rootfs) rdinit=/sbin/init mem=64M lpj=744448";
+	};
+
+	apb {
+		uart1: serial@b8000100 {
+			status = "okay";
+		};
+
+		uart2: serial@b8000200 {
+			status = "disabled";
+		};
+
+		uart3: serial@b8000300 {
+			status = "okay";
+		};
+
+		uart4: serial@b8000400 {
+			status = "disabled";
+		};
+
+		can0: can@b800b000 {
+			status = "okay";
+		};
+
+		can1: can@b800b400 {
+			status = "okay";
+		};
+
+		kpi: kpi@b8008000 {
+			status = "disabled";
+		};
+
+		rtc: rtc@b8004000 {
+			status = "okay";
+		};
+
+		jpeg: jpeg@b000a000 {
+			status = "okay";
+		};
+
+		adc: adc@b800a000 {
+			keypad-status = "disabled";
+			touch-status = "okay";
+			status = "okay";
+		};
+		
+		nadc: nadc@b800a000 {
+			status = "disabled";
+		};
+
+		i2c_gpio@0 {
+			status = "disabled";
+		};
+
+		i2c0: i2c0@b8006000 {
+			status = "okay";
+
+			nau8822: nau8822@1a {
+				compatible = "nuvoton,nau8822";
+				reg = <0x1a> ;
+			};
+		};
+
+		i2c1: i2c1@b8006100 {
+			status = "disabled";
+		};
+
+		pwm0: pwm0@b8007000 {
+			pinctrl-names = "default";
+			pinctrl-0 = <&pinctrl_pwm0_PB>;
+			status = "okay";
+		};
+
+		pwm1: pwm1@b8007000 {
+			pinctrl-names = "default";
+			pinctrl-0 = <&pinctrl_pwm1_PB>;
+			status = "okay";
+		};
+
+		pwm2: pwm2@b8007000 {
+			status = "disabled";
+		};
+
+		pwm3: pwm3@b8007000 {
+			status = "disabled";
+		};
+
+		spi0: spi0@b8006200 {
+			status = "disabled";
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			num_cs  = <2>;
+			lsb	 = <0>;
+			txneg   = <1>;
+			rxneg   = <0>;
+			divider = <4>;
+			sleep   = <0>;
+			txnum   = <0>;
+			txbitlen = <8>;
+			bus_num	= <0>;
+
+			flash: m25p80@0 {
+				compatible = "w25q128";
+				#address-cells = <1>;
+				#size-cells = <1>;
+				reg = <0>;
+				spi-max-frequency = <12000000>;
+
+				partition@0 {
+					label = "kernel";
+					reg = <0x00000000 0x0800000>;
+				};
+				partition@1 {
+					label = "rootfs";
+					reg = <0x0800000 0x0800000>;
+				};
+			};
+		};
+
+		spi1: spi1@b8006300 {
+			status = "okay";
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			num_cs  = <2>;
+			lsb	 = <0>;
+			txneg   = <1>;
+			rxneg   = <0>;
+			divider = <4>;
+			sleep   = <0>;
+			txnum   = <0>;
+			txbitlen = <8>;
+			bus_num	= <1>;
+
+			spidev@0x01 {
+				compatible = "spidev";
+				spi-max-frequency = <30000000>;
+				reg = <0>;
+			};
+		};
+		
+		gpio: gpio@b8003000 {
+			#gpio-cells = <2>;
+			#interrupt-cells = <2>;	
+			eint0-config = <0 1 0>;
+			eint1-config = <0 1 0>;
+			eint2-config = <0 1 0>;
+			eint3-config = <0 1 0>;
+			eint4-config = <0 1 0>;
+			eint5-config = <0 1 0>;
+			eint6-config = <0 1 0>;
+			eint7-config = <0 1 0>;			
+			status = "okay";
+		};
+		
+		pinctrl: pinctrl@b0000000 {
+		
+			leds{
+				pinctrl_leds: ledgrp {
+					nuvoton,pins = <
+						1 4 0 0
+						1 5 0 0
+					>;
+				};
+			};
+
+			gpio_keys{
+				pinctrl_gpio_key: keygrp {
+					nuvoton,pins = <
+						5 0xa 0 0
+						5 0xb 0 0
+						5 0xc 0 0
+						5 0xd 0 0
+					>;
+				};
+			};		
+		};
+
+		
+		leds {
+			compatible = "gpio-leds";
+			pinctrl-names = "default";
+			pinctrl-0 = <&pinctrl_leds>;
+
+			led0 {
+				label = "cpu";
+				gpios = <&gpio 36 0>;
+				default-state = "on";
+				linux,default-trigger = "heartbeat";
+			};
+			
+			led1 {
+				label = "custom";
+				gpios = <&gpio 37 0>;
+				default-state = "on";
+				linux,default-trigger = "heartbeat";
+			};
+						
+		};
+
+		gpio-keys {
+			compatible = "gpio-keys";
+			pinctrl-names = "default";
+			pinctrl-0 = <&pinctrl_gpio_key>;
+			
+			user {
+				label = "User Button";
+				gpios = <&gpio 203 1>;
+				gpio-key,wakeup;
+				linux,code = <1>;
+			};
+			
+			user1 {
+				label = "User Button 1";
+				gpios = <&gpio 204 1>;
+				gpio-key,wakeup;
+				linux,code = <2>;
+			};
+			
+			user2 {
+				label = "User Button 2";
+				gpios = <&gpio 205 1>;
+				gpio-key,wakeup;
+				linux,code = <3>;
+			};
+			
+			user3 {
+				label = "User Button 3";
+				gpios = <&gpio 206 1>;
+				gpio-key,wakeup;
+				linux,code = <3>;
+			};
+		};
+		
+	};
+
+	ahb {
+		usbh_ehci@b0005000 {
+		    pm_vbus_off = <0>;
+			status = "okay";
+		};
+		usbh_ohci@b0007000{
+			status = "okay";
+		};
+
+		crypto@b000f000{
+			status = "okay";
+		};
+
+		usbdev@b0006000 {
+			status = "disabled";
+		};
+		fmi@b000d000 {
+			compatible = "nuvoton,nuc970-fmi", "nand0";
+			pinctrl-names = "default";
+			pinctrl-0 = <&pinctrl_nand_pc>;
+			status = "okay";
+			#address-cells = <1>;
+			#size-cells = <1>;
+
+			partition@0x0 {
+				label = "u-boot";
+				reg = <0x00000000 0x0200000>;
+			};
+
+			partition@0x200000 {
+				label = "Kernel";
+				reg = <0x0200000 0x1400000>;
+			};
+
+			partition@0x1600000 {
+				label = "user";
+				reg = <0x1600000 0x6480000>;
+			};
+		};
+
+		sdh@b000c000 {
+			pinctrl-names = "default";
+			pinctrl-0 = <&pinctrl_sd0>;
+			status = "okay";
+		};
+
+		emac0@b0002000 {
+			status = "okay";
+		};
+		cap@b000e000 {
+			status = "disabled";
+		};
+		dma@b0004000 {
+			status = "okay";
+		};
+		ebi@b0001000 {
+			status = "disabled";
+		};
+		emac1@b0003000 {
+			status = "disabled";
+		};
+
+		lcd@b0008000 {
+			pinctrl-names = "default";
+			pinctrl-0 = <&pinctrl_lcd_24bit>;
+			status = "okay";
+			type = <0x200>;
+			bpp = <16>;
+			width = <480>;
+			height = <272>;
+			xres = <480>;
+			yres = <272>;
+			pixclock = <20000000>;
+			left_margin = <125>;
+			right_margin = <115>;
+			hsync_len = <64>;
+			upper_margin = <70>;
+			lower_margin = <36>;
+			vsync_len = <6>;
+			dccs = <0x0e00040a>;
+			fbctrl = <0x00F000F0>;
+			devctl = <0x070000c0>;
+			scale = <0x04000400>;
+			gpio_blen = <0xC3>;
+			gpio_lcs = <0xC2>;
+
+		};
+
+		i2s: i2s@b0009000 {
+			status = "disabled";
+		};
+
+		i2s_pcm: i2s_pcm {
+			status = "disabled";
+		};
+
+		sound {
+			compatible = "nuvoton,nuc970-audio";
+			i2s-controller = <&i2s>;
+			i2s-platform = <&i2s_pcm>;
+		};
+
+		ge2d@b000b000 {
+			status = "okay";
+		};
+	};
+};

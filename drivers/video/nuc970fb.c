@@ -530,7 +530,7 @@ static int nuc970fb_init_registers(struct fb_info *info)
 
 	writel(0, regs + REG_LCM_DEV_CTRL);
 
-#ifdef CONFIG_ILI9431_MPU80_240x320
+/*#ifdef CONFIG_ILI9431_MPU80_240x320*/
 {
 	int ret;
 	struct nuc970fb_mach_info *mach_info = fbi->mach_info;
@@ -539,9 +539,9 @@ static int nuc970fb_init_registers(struct fb_info *info)
 	ret = gpio_request(mach_info->gpio_blen,NULL);
 	if (ret)
 		printk("Warning, request gpio fail...\n");
-	gpio_direction_output(mach_info->gpio_blen, 0);
+	gpio_direction_output(mach_info->gpio_blen, 1);
 }
-#endif
+/*#endif*/
 
 	return 0;
 }

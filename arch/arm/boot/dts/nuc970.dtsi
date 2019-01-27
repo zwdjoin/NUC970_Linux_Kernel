@@ -1297,14 +1297,14 @@
 			/* 1st: 0(Disable)/1(Enable) */
 			/* 2nd: 0(PH0)/1(PF11) */
 			/* 3rd: 0(both)/1(rasing)/2(falling)/3(heigh level)/4(low level) */
-			eint0-config = <1 0 0>;
-			eint1-config = <1 0 0>;
-			eint2-config = <1 0 0>;
-			eint3-config = <1 0 0>;
-			eint4-config = <1 0 0>;
-			eint5-config = <1 0 0>;
-			eint6-config = <1 0 0>;
-			eint7-config = <1 0 0>;
+			eint0-config = <0 0 0>;
+			eint1-config = <0 0 0>;
+			eint2-config = <0 0 0>;
+			eint3-config = <0 0 0>;
+			eint4-config = <0 0 0>;
+			eint5-config = <0 0 0>;
+			eint6-config = <0 0 0>;
+			eint7-config = <0 0 0>;
 			status = "disabled";
 		};
 

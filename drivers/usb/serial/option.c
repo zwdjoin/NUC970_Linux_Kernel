@@ -1152,6 +1152,11 @@ static const struct usb_device_id option_ids[] = {
 	{ USB_DEVICE(QUALCOMM_VENDOR_ID, 0x9000)}, /* SIMCom SIM5218 */
 	{ USB_DEVICE(QUALCOMM_VENDOR_ID, 0x9003), /* Quectel UC20 */
 	  .driver_info = (kernel_ulong_t)&net_intf4_blacklist },
+#if 1
+       { USB_DEVICE(QUALCOMM_VENDOR_ID, 0x9215)}, /*Quectel EC20*/ 
+       { USB_DEVICE(0x2C7C, 0x0125)}, /*Quectel EC25/EC20 R2*/
+       { USB_DEVICE(0x2C7C, 0x0121)}, /*Quectel EC21*/
+#endif
 	{ USB_DEVICE(CMOTECH_VENDOR_ID, CMOTECH_PRODUCT_6001) },
 	{ USB_DEVICE(CMOTECH_VENDOR_ID, CMOTECH_PRODUCT_CMU_300) },
 	{ USB_DEVICE(CMOTECH_VENDOR_ID, CMOTECH_PRODUCT_6003),
@@ -1944,6 +1949,22 @@ static int option_probe(struct usb_serial *serial,
 	    iface_desc->bInterfaceClass != USB_CLASS_CDC_DATA)
 		return -ENODEV;
 
+#if 1 //Added by Quectel
+       //Quectel UC20's interface 4 can be used as USB Network device
+       if (serial->dev->descriptor.idVendor == cpu_to_le16(0x05C6) && 
+                       serial->dev->descriptor.idProduct == cpu_to_le16(0x9003)
+                       && serial->interface->cur_altsetting->desc.bInterfaceNumber >= 4)
+               return -ENODEV;
+       //Quectel EC20's interface 4 can be used as USB Network device
+       if (serial->dev->descriptor.idVendor == cpu_to_le16(0x05C6) && 
+                       serial->dev->descriptor.idProduct == cpu_to_le16(0x9215)
+                       && serial->interface->cur_altsetting->desc.bInterfaceNumber >= 4)
+               return -ENODEV;
+       //Quectel EC21&EC25&EC20 R2.0's interface 4 can be used as USB Network device
+       if (serial->dev->descriptor.idVendor == cpu_to_le16(0x2C7C)
+                       && serial->interface->cur_altsetting->desc.bInterfaceNumber >= 4)
+               return -ENODEV;
+#endif
 	/* Store device id so we can use it during attach. */
 	usb_set_serial_data(serial, (void *)id);
 
